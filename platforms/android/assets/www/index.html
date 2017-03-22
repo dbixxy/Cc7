@@ -1,0 +1,323 @@
+
+<!--
+    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+<head>
+	
+	<!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-eval' 'unsafe-inline'; img-src 'self' data: 'unsafe-inline'; media-src *;"> -->
+	<meta http-equiv="Content-Security-Policy" content="
+	    default-src *; 
+	    style-src * 'unsafe-inline'; 
+	    script-src * 'unsafe-inline'; 
+	    media-src *; img-src * data:; 
+	" />
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" /> -->
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src * " /> -->
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-eval' 'unsafe-inline'; img-src 'self' data:"> -->
+	
+    <!-- <link rel="stylesheet" type="text/css" href="css/index.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css" />
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+	
+        
+	
+	
+    <title>Capture Photo</title>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"/>
+    <script type="text/javascript" charset="utf-8">
+
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value 
+
+    // Wait for PhoneGap to connect with the device
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
+
+    // PhoneGap is ready to be used!
+    //
+    
+    function onDeviceReady() {
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoDataSuccess(imageData) {
+      // Get image handle
+      //
+      var smallImage = document.getElementById('smallImage');
+
+      // Unhide image elements
+      //
+      smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      smallImage.src = "data:image/jpeg;base64," + imageData;
+    }
+    
+	// Called when a photo is successfully retrieved
+    //
+    function onPhotoFileSuccess(imageData) {
+      // Get image handle
+      console.log(JSON.stringify(imageData));
+      
+   	  // Get image handle
+      //
+      var smallImage = document.getElementById('selectImage');
+
+      // Unhide image elements
+      //
+      smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      smallImage.src = imageData;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoURISuccess(imageURI) {
+      // Uncomment to view the image file URI 
+      // console.log(imageURI);
+
+      // Get image handle
+      //
+      var largeImage = document.getElementById('selectImage');
+
+      // Unhide image elements
+      //
+      largeImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      largeImage.src = imageURI;
+    }
+
+	function putTextToPhoto() {
+	     var canvas = document.getElementById("myCanvas");
+	     var context = canvas.getContext("2d");
+	     var imageObj = document.getElementById('selectImage');//new Image();
+	         //context.drawImage(imageObj, 0, 0);
+	         
+	          canvas.width  = imageObj.width;//window.innerWidth;
+			  canvas.height = imageObj.height;//window.innerHeight;
+	         context.drawImage(imageObj, 0, 0, imageObj.width,    imageObj.height);//,     // source rectangle
+                   //0, 0, imageObj.width, imageObj.height); // destination rectangle
+                   
+        
+                      
+	         //context.font = "40pt Calibri";
+	         //2- Set parameters
+	         	var sizeText = document.getElementById("sizeText");
+				context.font = sizeText.value + 'pt Arial';
+				context.fillStyle = 'white';
+				context.lineWidth = 1;
+				context.strokeStyle = 'black';
+				var txt = document.getElementById('description').value;
+				var x = canvas.width / 2;
+				var y = canvas.height-sizeText.value;
+				context.textAlign = 'center';
+				context.fillText(txt, x, y);
+				context.strokeText(txt, x, y);
+	     //imageObj.src = document.getElementById('selectImage').src; 
+	};
+
+	 //devgeeks plugin for saving canvas images to photo gallery       
+	function savePhoto(link){
+		var canvas = document.getElementById("myCanvas");
+		var image = canvas.toDataURL("image/png");//.replace("image/png", "image/octet-stream"); //Convert image to 'octet-stream' (Just a download, really)
+		//document.getElementById('saveImage').src = image;
+		/*
+		window.canvas2ImagePlugin.saveImageDataToLibrary(
+	        function(msg){
+	            alert("Photo Saved: " + msg);
+	        },
+	        function(err){
+	            alert("Photo Saved: " + err);
+	        },
+	        canvas
+	    );
+	    */
+		//window.location.href = image;
+		document.write('<img id="endImage" src="'+image+'"/>');
+		//var endImage = document.getElementById("endImage");
+		//window.location.href = endImage;
+		
+		
+	    /*
+	    window.savephotoplugin(canvas,"image/png",device.version,function(val){ 
+		  //returns you the saved path in val	
+				alert("Photo Saved: " + val);	
+		});
+		
+		*/
+	}
+	
+	function successCallback( result ) {
+        q.resolve( 'file:///' + result );
+    }
+    function failureCallback( err ) {
+        console.error( err );
+        q.reject( err );
+    }
+	
+    // A button will call this function
+    //
+    function capturePhotoWithData() {
+      // Take picture using device camera and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50 });
+    }
+
+    function capturePhotoWithFile() {
+        navigator.camera.getPicture(onPhotoFileSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+    }
+    
+    // A button will call this function
+    //
+    function getPhoto(source) {
+      // Retrieve image file location from specified source
+      navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 100, 
+        destinationType: destinationType.FILE_URI,
+        sourceType: source });
+    }
+
+    // Called if something bad happens.
+    // 
+    function onFail(message) {
+      alert('Failed because: ' + message);
+    }
+
+    </script>
+</head>
+
+<body>
+
+	<div data-role="page" id="mainPage">
+
+		<div data-role="header">
+			<h1>CC7 Image Report</h1>
+			<!--
+			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Button</a>
+			-->
+		</div><!-- /header -->
+	
+		<div role="main" class="ui-content">
+			<button class="ui-btn ui-corner-all ui-shadow" onclick="capturePhotoWithFile();">Take a Photo</button> <br>
+			<button class="ui-btn ui-corner-all ui-shadow" onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Select a Photo</button><br>
+			Description: <input type="text" name="description" id="description" value="ทดสอบรูปภาพที่ใช้">
+			Text Size: <input type="range" name="sizeText" id="sizeText" value="25" min="1" max="50" />
+			
+			<img style="display:none;width:100%;height:100%;" id="selectImage" src="" />
+			<!-- <canvas  id="myCanvas" width="400"></canvas> -->
+		</div><!-- /content -->
+	
+		<div data-role="footer" data-position="fixed">
+			<a href="#resultPage" class="ui-btn ui-corner-all ui-shadow" onclick="putTextToPhoto();">Put Text to Photo</a>
+		</div><!-- /footer -->
+	</div><!-- /page -->
+
+	<div data-role="page" id="resultPage">
+
+		<div data-role="header">
+			<h1>CC7 Image Report</h1>
+			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Button</a>
+		</div><!-- /header -->
+	
+		<div role="main" class="ui-content">
+			<canvas  id="myCanvas"></canvas>
+			<img src="" id="saveImage" />
+		</div><!-- /content -->
+	
+		<div data-role="footer" data-position="fixed">
+			<a href="#" id="downloadLnk" download="YourFileName.jpg" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit" onclick="savePhoto(this);">Save</a>
+			<!-- <a href="#" id="share" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-edit" >share</a> -->
+			<!-- <a href="#" class="ui-btn ui-corner-all ui-shadow" onclick="sharePhoto();">Share</a> -->
+		</div><!-- /footer -->
+	</div><!-- /page -->
+	
+	
+	<div data-role="page" id="hiddenPage">
+
+		<div data-role="header">
+			<h1>CC7 Image Report</h1>
+			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+		</div><!-- /header -->
+	
+		<div role="main" class="ui-content">
+			<img src="" id="saveImage" />
+		</div><!-- /content -->
+	
+		<div data-role="footer" data-position="fixed">
+		</div><!-- /footer -->
+	</div><!-- /page -->
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <!-- <script type="text/javascript" src="js/index.js"></script> -->
+    <!-- <script type="text/javascript" src="js/download.js"></script> -->
+    <script type="text/javascript" src="js/Canvas2ImagePlugin.js"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="js/SavePhotoPlugin.js"></script> -->
+    <script type="text/javascript">
+        //app.initialize();
+/*
+        var callback = function () {
+		    window.canvas2ImagePlugin.saveImageDataToLibrary(
+	        function(msg){
+	            alert("Photo Saved: " + msg);
+	        },
+	        function(err){
+	            alert("Photo Saved: " + err);
+	        },
+	        document.getElementById("myCanvas")
+			);
+		};
+		
+		$(document).ready(function () {
+		    document.addEventListener("deviceready", callback, false);
+		};*/
+    </script>
+</body>
+
+</html>

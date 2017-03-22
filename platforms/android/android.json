@@ -1,0 +1,49 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Canvas2ImagePlugin\"><param name=\"android-package\" value=\"org.devgeeks.Canvas2ImagePlugin.Canvas2ImagePlugin\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "org.devgeeks.Canvas2ImagePlugin": {
+            "PACKAGE_NAME": "com.magnexium.cc7"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "id": "org.devgeeks.Canvas2ImagePlugin.Canvas2ImagePlugin",
+            "file": "plugins/org.devgeeks.Canvas2ImagePlugin/www/Canvas2ImagePlugin.js",
+            "pluginId": "org.devgeeks.Canvas2ImagePlugin",
+            "clobbers": [
+                "window.canvas2ImagePlugin"
+            ]
+        }
+    ],
+    "plugin_metadata": {
+        "org.devgeeks.Canvas2ImagePlugin": "0.6.0"
+    }
+}

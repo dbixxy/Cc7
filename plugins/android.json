@@ -1,0 +1,15 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "org.devgeeks.Canvas2ImagePlugin": {
+            "PACKAGE_NAME": "com.magnexium.cc7"
+        }
+    },
+    "dependent_plugins": {}
+}
